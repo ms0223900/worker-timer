@@ -26,7 +26,18 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "parser": "@typescript-eslint/parser",
+    "rules": {
+      "@typescript-eslint/indent": [
+        "warn",
+        2
+      ],
+      "semi": [
+        "warn",
+        "always"
+      ]
+    }
   },
   "browserslist": {
     "production": [

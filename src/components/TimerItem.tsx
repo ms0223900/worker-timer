@@ -1,0 +1,96 @@
+import { ReactComponent as StartIcon } from "../static/play_arrow_black_24dp.svg";
+import { ReactComponent as PauseIcon } from "../static/pause_black_24dp.svg";
+import { ReactComponent as DeleteIcon } from "../static/delete_black_24dp.svg";
+import { ReactComponent as ResetIcon } from "../static/restart_alt_black_24dp.svg";
+import { ReactComponent as DoneIcon } from "../static/done_black_24dp.svg";
+import { TimeValues } from "../states/TimerPlocState";
+
+export interface TimerProps {
+  isEdit: boolean
+  paused: boolean
+  timeStr: string
+  timeValues: TimeValues
+  onStartPause: any
+  onReset: any
+  onDeleteTimer: any
+  onEditTime: any
+  onToggleEditTime: (toggle: boolean) => () => any
+}
+
+const TimerInput = (props: any) => (
+  <input
+    {...props}
+    type="number"
+    style={{
+      width: 60,
+      padding: 4,
+      fontSize: 30,
+      textAlign: "right",
+      border: "none",
+      backgroundColor: "#eee",
+      borderRadius: 6
+    }}
+  />
+);
+
+const TimerItem = ({
+  isEdit,
+  paused,
+  timeStr,
+  timeValues,
+  onStartPause,
+  onReset,
+  onDeleteTimer,
+  onEditTime,
+  onToggleEditTime
+}: TimerProps) => {
+  return (
+    <div
+      style={{
+        paddingBottom: 8
+      }}
+    >
+      <div className={"timer-wrapper"}>
+        <div onDoubleClick={onToggleEditTime(true)}>
+          {isEdit ? (
+            <form
+              style={{
+                display: "flex",
+                alignItems: "center"
+              }}
+              onChange={onEditTime}
+            >
+              <TimerInput name="mins" value={String(timeValues.mins)} />
+              <div
+                style={{
+                  padding: "0px 4px",
+                  fontSize: 30,
+                  fontWeight: "bolder"
+                }}
+              >
+                {" : "}
+              </div>
+              <TimerInput name="secs" value={String(timeValues.secs)} />
+              <DoneIcon onClick={onToggleEditTime(false)} />
+            </form>
+          ) : (
+            <h1>{timeStr}</h1>
+          )}
+        </div>
+        <div className={"button-wrapper"}>
+          <button className={"timer-btn"} onClick={() => onStartPause()}>
+            {paused ? <StartIcon /> : <PauseIcon />}
+          </button>
+          <button className={"timer-btn"} onClick={onReset}>
+            <ResetIcon />
+          </button>
+          <button className={"timer-btn"} onClick={onDeleteTimer}>
+            <DeleteIcon />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TimerItem;
