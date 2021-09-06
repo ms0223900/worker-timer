@@ -42,7 +42,6 @@ class PlocState<State> {
   updateState<NewState extends Partial<State> | GetNewStateFn<State>>(newState: NewState): void {
     const _newState = this.getNewState(newState);
 
-    console.log(this.state);
     this._state = { ...this.state, ..._newState };
     this.listeners.forEach((l, i) => {
       if (l.compareValFn) {

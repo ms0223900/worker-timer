@@ -44,7 +44,6 @@ class TimerListPlocState extends PlocState<TimerListState> {
   }
 
   private listenToTimeListChanged: Listener<TimerListState> = (s) => {
-    console.log('listenToTimeListChanged: ', s);
     TimerStorage.setLSData(s.timerList);
     return ({
       timerList: s.timerList,
@@ -72,7 +71,6 @@ class TimerListPlocState extends PlocState<TimerListState> {
   }
 
   handleRemoveTimer = (id: number) => {
-    console.log(id);
     this.updateState(s => ({
       timerList: s.timerList.filter(t => t.timerId !== id)
     }));

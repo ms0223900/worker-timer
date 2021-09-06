@@ -1,4 +1,4 @@
-import { SetTimeValuesFn } from "common-types";
+import { Callback, SetTimeValuesFn } from "common-types";
 import { WORKER_MESSAGES, WORKER_PATH } from "../config";
 import parseSecsToMinSec from "../utils/functions/parseSecsToMinSec";
 import PlocState, { Listener, } from "./PlocState";
@@ -18,6 +18,7 @@ export interface TimerState {
   paused: boolean
   timeValues: TimeValues
   parsedMinSecStr: string
+  onTimeupCb?: Callback
   onTimeValuesChangedCb?: (timeValues: TimeValues) => any
 }
 
@@ -49,28 +50,28 @@ class TimerPlocState extends PlocState<TimerState> {
       parsedMinSecStr: parseSecsToMinSec(s.remainSecs)
     }));
 
-    // this.addlistener(s => {
-    //   this.state.onTimeValuesChangedCb && 
-    //     this.state.onTimeValuesChangedCb({...s.timeValues});
-    // }, s => [s.timeValues]);
-
     this.addlistener(s => {
+      const remainSecs = getRemainSecs(s.timeValues, s.passedSecs);
+      const parsedMinSecStr = parseSecsToMinSec(remainSecs);
       return ({
-        remainSecs: getRemainSecs(s.timeValues, s.passedSecs)
+        remainSecs,
+        parsedMinSecStr,
       });
-    }, s => [s.timeValues, s.passedSecs]);
+    }, s => [s.passedSecs, s.timeValues, ]);
 
-    this.addlistener(s => ({
-      parsedMinSecStr: parseSecsToMinSec(s.remainSecs)
-    }), s => [s.remainSecs]);
+    this.addlistener(
+      this.updateByRemainSecs,
+      s => [s.remainSecs, s.paused]
+    );
   }
 
   handleResetTimer = () => {
     console.log('reset');
     this.handlePauseTimer();
-    this.updateState({
-      passedSecs: 0
-    });
+    this.updateState(s => ({
+      passedSecs: 0,
+      // parsedMinSecStr: parseSecsToMinSec(s.remainSecs)
+    }));
   }
 
   handlePauseTimer() {
@@ -117,7 +118,7 @@ class TimerPlocState extends PlocState<TimerState> {
     }));
   }
 
-  updateByTimerWorker() {
+  private updateByTimerWorker() {
     const tick = (e: MessageEvent<any>) => {
       if(e.data === WORKER_MESSAGES.TICK_FROM_WORKER) {
         this.handleAddPassedSecs();
@@ -129,6 +130,13 @@ class TimerPlocState extends PlocState<TimerState> {
       this.timerWorker.removeEventListener('message', tick);
       this.timerWorker.postMessage(WORKER_MESSAGES.STOP);
     };
+  }
+
+  private updateByRemainSecs: Listener<TimerState> = (s) => {
+    if(s.remainSecs < 0 && !s.paused) {
+      this.handleResetTimer();
+      s.onTimeupCb && s.onTimeupCb();
+    }
   }
 }
 
