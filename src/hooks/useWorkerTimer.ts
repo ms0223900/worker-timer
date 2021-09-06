@@ -1,7 +1,8 @@
 import { DEFAULT_TIME_VALUES } from "config";
 import { ChangeEvent, FormEvent, useEffect, useRef } from "react";
-import TimerPlocState, { TimeValues } from "../states/TimerPlocState";
-import TogglePlocState from "../states/TogglePlocState";
+import { Listener } from "states/PlocState";
+import TimerPlocState, { TimerState, TimeValues } from "../states/TimerPlocState";
+import TogglePlocState, { ToggleState } from "../states/TogglePlocState";
 import usePlocState from "../states/usePlocState";
 
 export interface UseWorkerTimerOptions {
@@ -17,9 +18,6 @@ const useWorkerTimer = ({
 }: UseWorkerTimerOptions) => {
   const timerPloc = useRef(new TimerPlocState({
     timeValues: initTimeVals || DEFAULT_TIME_VALUES,
-    // onTimeValuesChangedCb: (_timeValues: TimeValues) => {
-    //   onTimeValuesChanged && onTimeValuesChanged(timerId, _timeValues);
-    // },
   }));
   const timerState = usePlocState(timerPloc.current);
 
@@ -34,14 +32,19 @@ const useWorkerTimer = ({
     timerPloc.current.handleEditTimeVals(e.target.name, e.target.value);
   };
 
+  const handleTimeValueChanged = (_timeValues: TimeValues) => {
+    onTimeValuesChanged && onTimeValuesChanged(timerId, {..._timeValues});
+  };
+
   useEffect(() => {
-    timerPloc.current.updateState(s => ({
-      onTimeValuesChangedCb: (_timeValues: TimeValues) => {
-        console.log('onTimeValuesChangedCb');
-        toggleState.toggle && onTimeValuesChanged && onTimeValuesChanged(timerId, {..._timeValues});
+    const listner: Listener<ToggleState> = s => {
+      if(!s.toggle) {
+        handleTimeValueChanged(timerPloc.current.state.timeValues);
       }
-    }));
-  }, [onTimeValuesChanged, timerId, toggleState.toggle]);
+    };
+    togglePloc.current.addlistener(listner, s => [s.toggle]);
+    return () => togglePloc.current.removeListener(listner);
+  }, [handleTimeValueChanged]);
 
   return ({
     toggleState: toggleState,

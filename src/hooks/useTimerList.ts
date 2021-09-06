@@ -6,6 +6,9 @@ import TimerStorage from "utils/handlers/TimerStorage";
 
 const useTimerList = () => {
   const timerListPloc = useRef(new TimerListPlocState({
+    latestId: TimerStorage.getTimersMaxId(
+      TimerStorage.getLSData()
+    ),
     timerList: TimerStorage.getLSData()
   }));
   const timerListState = usePlocState(timerListPloc.current);

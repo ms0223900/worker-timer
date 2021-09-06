@@ -49,10 +49,10 @@ class TimerPlocState extends PlocState<TimerState> {
       parsedMinSecStr: parseSecsToMinSec(s.remainSecs)
     }));
 
-    this.addlistener(s => {
-      this.state.onTimeValuesChangedCb && 
-        this.state.onTimeValuesChangedCb({...s.timeValues});
-    }, s => [s.timeValues]);
+    // this.addlistener(s => {
+    //   this.state.onTimeValuesChangedCb && 
+    //     this.state.onTimeValuesChangedCb({...s.timeValues});
+    // }, s => [s.timeValues]);
 
     this.addlistener(s => {
       return ({
