@@ -3,19 +3,7 @@ import { ReactComponent as PauseIcon } from "../static/pause_black_24dp.svg";
 import { ReactComponent as DeleteIcon } from "../static/delete_black_24dp.svg";
 import { ReactComponent as ResetIcon } from "../static/restart_alt_black_24dp.svg";
 import { ReactComponent as DoneIcon } from "../static/done_black_24dp.svg";
-import { TimeValues } from "../states/TimerPlocState";
-
-export interface TimerProps {
-  isEdit: boolean
-  paused: boolean
-  timeStr: string
-  timeValues: TimeValues
-  onStartPause: any
-  onReset: any
-  onDeleteTimer: any
-  onEditTime: any
-  onToggleEditTime: (toggle: boolean) => () => any
-}
+import { TimerItemProps } from "./types";
 
 const TimerInput = (props: any) => (
   <input
@@ -43,7 +31,7 @@ const TimerItem = ({
   onDeleteTimer,
   onEditTime,
   onToggleEditTime
-}: TimerProps) => {
+}: TimerItemProps) => {
   return (
     <div
       style={{

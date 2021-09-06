@@ -1,3 +1,4 @@
+import { SetTimeValuesFn } from "common-types";
 import { WORKER_MESSAGES, WORKER_PATH } from "../config";
 import parseSecsToMinSec from "../utils/functions/parseSecsToMinSec";
 import PlocState, { Listener, } from "./PlocState";
@@ -17,6 +18,7 @@ export interface TimerState {
   paused: boolean
   timeValues: TimeValues
   parsedMinSecStr: string
+  onTimeValuesChangedCb?: (timeValues: TimeValues) => any
 }
 
 export const initTimerState: TimerState = {
@@ -33,8 +35,11 @@ export const initTimerState: TimerState = {
 class TimerPlocState extends PlocState<TimerState> {
   timerWorker = new Worker(WORKER_PATH)
 
-  constructor(_initTimerState = initTimerState) {
-    super(_initTimerState);
+  constructor(initState?: Partial<TimerState>) {
+    super({
+      ...initTimerState,
+      ...initState,
+    });
     this.updateByTimerWorker();
 
     this.updateState(s => ({
@@ -44,9 +49,16 @@ class TimerPlocState extends PlocState<TimerState> {
       parsedMinSecStr: parseSecsToMinSec(s.remainSecs)
     }));
 
-    this.addlistener(s => ({
-      remainSecs: getRemainSecs(s.timeValues, s.passedSecs)
-    }), s => [s.timeValues, s.passedSecs]);
+    this.addlistener(s => {
+      this.state.onTimeValuesChangedCb && 
+        this.state.onTimeValuesChangedCb({...s.timeValues});
+    }, s => [s.timeValues]);
+
+    this.addlistener(s => {
+      return ({
+        remainSecs: getRemainSecs(s.timeValues, s.passedSecs)
+      });
+    }, s => [s.timeValues, s.passedSecs]);
 
     this.addlistener(s => ({
       parsedMinSecStr: parseSecsToMinSec(s.remainSecs)

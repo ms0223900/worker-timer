@@ -4,27 +4,32 @@ interface GetNewStateFn<State> {
   (s: State): Partial<State>
 }
 
+export interface SingleListenerWithCompare<State> {
+  compareVal: State[keyof State][]
+  compareValFn?: (s: State) => State[keyof State][]
+  listener: Listener<State>
+}
+
 class PlocState<State> {
-  _state: State
+  private _state: State
 
   get state(): State {
     return this._state;
   }
 
-  listeners: ({
-    compareVal: State[keyof State][]
-    compareValFn?: (s: State) => State[keyof State][]
-    listener: Listener<State>
-  })[]
+  listeners: (SingleListenerWithCompare<State>)[]
 
   constructor(initState: State) {
     this._state = initState;
     this.listeners = [];
   }
 
-  checkShouldUpdateByListener(prevState: any[], getStateFn: (s: State) => any): boolean {
+  private checkShouldUpdateByListener(prevState: any[], getStateFn: (s: State) => any): boolean {
     for (let i = 0; i < prevState.length; i += 1) {
-      if (prevState[i] !== getStateFn(this._state)[i]) return true;
+      const prevVal = prevState[i];
+      const newVal = getStateFn(this.state)[i];
+      // console.log('checkShouldUpdateByListener: ', prevVal, newVal);
+      if (JSON.stringify(prevVal) !== JSON.stringify(newVal)) return true;
     }
     return false;
   }
@@ -37,30 +42,33 @@ class PlocState<State> {
   updateState<NewState extends Partial<State> | GetNewStateFn<State>>(newState: NewState): void {
     const _newState = this.getNewState(newState);
 
-    this._state = { ...this._state, ..._newState };
+    console.log(this.state);
+    this._state = { ...this.state, ..._newState };
     this.listeners.forEach((l, i) => {
       if (l.compareValFn) {
         const shouldUpdateByCompareVal = this.checkShouldUpdateByListener(l.compareVal, l.compareValFn);
         if (!shouldUpdateByCompareVal) return;
       }
 
-      const listenerReturnVal = l.listener(this._state);
+      const listenerReturnVal = l.listener(this.state);
       if (listenerReturnVal && typeof listenerReturnVal === 'object') {
         this._state = {
-          ...this._state,
+          ...this.state,
           ...listenerReturnVal,
         };
       }
-      if (l.compareValFn) { this.listeners[i].compareVal = l.compareValFn(this._state); }
+      if (l.compareValFn) { l.compareVal = [...l.compareValFn(this.state)]; }
     });
   }
 
   addlistener(listener: Listener<State>, compareValFn?: (s: State) => State[keyof State][]): void {
-    this.listeners.push({
+    const singleListener: SingleListenerWithCompare<State> = {
       listener,
       compareValFn,
-      compareVal: compareValFn ? compareValFn(this._state) : [],
-    });
+      compareVal: compareValFn ? [...compareValFn(this.state)] : [],
+    };
+    // console.log(singleListener);
+    this.listeners.push(singleListener);
   }
 
   removeListener(listener: Listener<State>): void {

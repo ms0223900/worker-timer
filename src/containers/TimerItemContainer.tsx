@@ -1,8 +1,9 @@
 import React, { memo } from 'react';
 import TimerItem from '../components/TimerItem';
 import useWorkerTimer from '../hooks/useWorkerTimer';
+import { TimerItemContainerProps } from './types';
 
-const TimerItemContainer = () => {
+const TimerItemContainer = (props: TimerItemContainerProps) => {
   const {
     toggleState,
     timerState,
@@ -10,7 +11,7 @@ const TimerItemContainer = () => {
     handleReset,
     handleStartPause,
     handleToggleEditTime,
-  } = useWorkerTimer();
+  } = useWorkerTimer(props);
 
   return (
     <TimerItem
@@ -21,7 +22,7 @@ const TimerItemContainer = () => {
       onEditTime={handleEditTime}
       onStartPause={handleStartPause}
       onReset={handleReset}
-      onDeleteTimer={() => {}}
+      onDeleteTimer={props.onDeleteTimer}
       onToggleEditTime={(toggle: boolean) => () => handleToggleEditTime(toggle)}
     />
   );
