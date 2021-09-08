@@ -56,6 +56,11 @@ class AudioPlocState extends PlocState<AudioState> {
     return this.getAudioUrl(this.state.selectedAudio)?.url;
   }
 
+  handleSetAudioUrl = (url: string) => {
+    this.audio.setAttribute('src', url);
+    this.audio.load();
+  }
+
   handleAsyncPlay = () => {
     this.audio.play();
     return new Promise(res => {
@@ -77,9 +82,10 @@ class AudioPlocState extends PlocState<AudioState> {
   handleRepeatPlay = () => {
     (async () => {
       const repeatTimes = this.state.repeatTimes || 3;
-      for await (const iterator of Array(repeatTimes)) {
+      for await (const i of Array(repeatTimes)) {
         await this.handleAsyncPlay();
       }
+      this.handlePause();
     })();
   }
 

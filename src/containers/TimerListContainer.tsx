@@ -1,8 +1,9 @@
 import TimerList from 'components/TimerList';
 import useTimerList from 'hooks/useTimerList';
 import React, { memo } from 'react';
+import { TimerListContainerProps } from './types';
 
-const TimerListContainer = () => {
+const TimerListContainer = (props: TimerListContainerProps) => {
   const {
     timerListState,
     handleAddTimer,
@@ -12,6 +13,7 @@ const TimerListContainer = () => {
 
   return (
     <TimerList 
+      {...props}
       timerListData={timerListState.timerList}
       onAddTimer={() => handleAddTimer()}
       onDeleteTimer={handleRemoveTimer}

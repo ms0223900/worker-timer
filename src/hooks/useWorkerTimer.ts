@@ -1,3 +1,4 @@
+import { Callback } from "common-types";
 import { DEFAULT_TIME_VALUES } from "config";
 import { ChangeEvent, FormEvent, useCallback, useEffect, useRef } from "react";
 import AudioPlocState from "states/AudioPlocState";
@@ -10,26 +11,18 @@ export interface UseWorkerTimerOptions {
   timerId: number
   initTimeVals?: TimeValues
   onTimeValuesChanged?: (timerId: number, timeVals: TimeValues) => any
+  onPlayAudio: Callback
 }
 
 const useWorkerTimer = ({
   timerId,
   initTimeVals,
   onTimeValuesChanged,
+  onPlayAudio,
 }: UseWorkerTimerOptions) => {
-  const audioPloc = useRef(
-    new AudioPlocState({
-      volume: 0.7,
-      playTimeout: 3000,
-      repeatTimes: 1,
-      selectedAudio: 'heyListen'
-    })
-  );
-  const audioState = usePlocState(audioPloc.current);
-
   const timerPloc = useRef(new TimerPlocState({
     timeValues: initTimeVals || DEFAULT_TIME_VALUES,
-    onTimeupCb: () => audioPloc.current.handlePlay()
+    onTimeupCb: () => onPlayAudio()
   }));
   const timerState = usePlocState(timerPloc.current);
 

@@ -1,13 +1,10 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import TimerItemContainer from './containers/TimerItemContainer';
-import TimerListContainer from 'containers/TimerListContainer';
+import WorkerTimerView from 'view/WorkerTimerView';
 
 function App() {
   return (
     <div className="App">
-      <TimerListContainer />
+      <WorkerTimerView />
     </div>
   );
 }

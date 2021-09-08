@@ -1,5 +1,13 @@
-import { Callback } from "../common-types";
+import { TimerItemContainerProps } from "containers/types";
+import { ChangeEvent } from "react";
+import { Callback, SingleSelectorValText } from "../common-types";
 import { TimeValues } from "../states/TimerPlocState";
+
+export interface AudioSelectorProps {
+  value: string
+  selectorListData: SingleSelectorValText[]
+  onChangeSelect: (e: ChangeEvent<any>) => any
+}
 
 export interface SingleTimer {
   timerId: number
@@ -18,7 +26,7 @@ export interface TimerItemProps {
   onToggleEditTime: (toggle: boolean) => () => any
 }
 
-export interface TimerListProps {
+export interface TimerListProps extends Pick<TimerItemContainerProps, 'onPlayAudio'> {
   timerListData: SingleTimer[]
   onAddTimer: Callback
   onDeleteTimer: (id: number) => any

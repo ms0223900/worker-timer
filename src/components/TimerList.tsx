@@ -8,6 +8,7 @@ const TimerList = ({
   onAddTimer,
   onDeleteTimer,
   onTimeValuesChanged,
+  onPlayAudio,
 }: TimerListProps) => {
   return (
     <>
@@ -18,6 +19,7 @@ const TimerList = ({
           initTimeVals={timeValues}
           onDeleteTimer={() => onDeleteTimer(id)}
           onTimeValuesChanged={onTimeValuesChanged}
+          onPlayAudio={onPlayAudio}
         />
       ))}
       <button className={"timer-btn"} onClick={onAddTimer}>
