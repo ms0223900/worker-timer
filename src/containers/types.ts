@@ -3,7 +3,7 @@ import { TimerItemProps, TimerListProps } from "../components/types";
 import { UseWorkerTimerOptions } from "../hooks/useWorkerTimer";
 import { TimeValues } from "../states/TimerPlocState";
 
-type PickedTimerItemProps = Pick<TimerItemProps, 'onDeleteTimer'>
+type PickedTimerItemProps = Pick<TimerItemProps, 'onDeleteTimer' | 'timerName'>
 
 export interface TimerItemContainerProps extends UseWorkerTimerOptions, PickedTimerItemProps {
   // onSetTimeValues: SetTimeValuesFn

@@ -8,7 +8,8 @@ const TimerListContainer = (props: TimerListContainerProps) => {
     timerListState,
     handleAddTimer,
     handleRemoveTimer,
-    handleSetTimeValues
+    handleSetTimeValues,
+    handleSetTimerName,
   } = useTimerList();
 
   return (
@@ -18,6 +19,7 @@ const TimerListContainer = (props: TimerListContainerProps) => {
       onAddTimer={() => handleAddTimer()}
       onDeleteTimer={handleRemoveTimer}
       onTimeValuesChanged={handleSetTimeValues}
+      onTimerNameChanged={handleSetTimerName}
     />
   );
 };

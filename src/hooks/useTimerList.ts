@@ -19,8 +19,14 @@ const useTimerList = () => {
   } = timerListPloc.current;
 
   const handleSetTimeValues = (id: number, timeValues: TimeValues) => {
-    timerListPloc.current.handleSetTimeValues(
+    timerListPloc.current.handleUpdateTimerListByFn(
       getNewTimerList(id, timeValues)
+    );
+  };
+
+  const handleSetTimerName = (id: number, timerName?: string) => {
+    timerListPloc.current.handleUpdateTimerListByFn(
+      getNewTimerList(id, undefined, timerName)
     );
   };
 
@@ -28,6 +34,7 @@ const useTimerList = () => {
     timerListState,
     handleAddTimer,
     handleSetTimeValues,
+    handleSetTimerName,
     handleRemoveTimer,
   });
 };

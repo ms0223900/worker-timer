@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { AudioSelectorProps } from './types';
+import './styles.scss';
 
 const AudioSelector = ({
   value,
@@ -11,7 +12,7 @@ const AudioSelector = ({
       <h3>{'Audio: '}</h3>
       <select value={value} onChange={onChangeSelect}>
         {selectorListData.map(s => (
-          <option value={s.value}>
+          <option key={s.value} value={s.value}>
             {s.text}
           </option>
         ))}

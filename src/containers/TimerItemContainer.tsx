@@ -8,6 +8,7 @@ const TimerItemContainer = (props: TimerItemContainerProps) => {
     toggleState,
     timerState,
     handleEditTime,
+    handleEditTimerName,
     handleReset,
     handleStartPause,
     handleToggleEditTime,
@@ -15,11 +16,13 @@ const TimerItemContainer = (props: TimerItemContainerProps) => {
 
   return (
     <TimerItem
+      timerName={timerState.timerName}
       isEdit={toggleState.toggle}
       paused={timerState.paused}
       timeStr={timerState.parsedMinSecStr}
       timeValues={timerState.timeValues}
       onEditTime={handleEditTime}
+      onEditTimerName={handleEditTimerName}
       onStartPause={handleStartPause}
       onReset={handleReset}
       onDeleteTimer={props.onDeleteTimer}

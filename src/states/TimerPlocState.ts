@@ -13,6 +13,7 @@ export interface TimeValues {
 }
 
 export interface TimerState {
+  timerName?: string
   remainSecs: number
   passedSecs: number
   paused: boolean
@@ -23,6 +24,7 @@ export interface TimerState {
 }
 
 export const initTimerState: TimerState = {
+  timerName: '',
   remainSecs: 0,
   passedSecs: 0,
   paused: true,
@@ -109,6 +111,12 @@ class TimerPlocState extends PlocState<TimerState> {
         ...s.timeValues,
         [name]: Number(val) < 0 ? 0 : Number(val)
       })
+    }));
+  }
+
+  handleEditTimerName = (tName: string) => {
+    this.updateState(s => ({
+      timerName: tName,
     }));
   }
 

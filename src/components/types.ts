@@ -1,4 +1,5 @@
 import { TimerItemContainerProps } from "containers/types";
+import { UseWorkerTimerOptions } from "hooks/useWorkerTimer";
 import { ChangeEvent } from "react";
 import { Callback, SingleSelectorValText } from "../common-types";
 import { TimeValues } from "../states/TimerPlocState";
@@ -11,24 +12,27 @@ export interface AudioSelectorProps {
 
 export interface SingleTimer {
   timerId: number
+  timerName?: string
   timeValues: TimeValues
 }
 
 export interface TimerItemProps {
+  timerName?: string
   isEdit: boolean
   paused: boolean
   timeStr: string
   timeValues: TimeValues
-  onStartPause: any
-  onReset: any
-  onDeleteTimer: any
-  onEditTime: any
+  onStartPause: Callback
+  onReset: Callback
+  onDeleteTimer: Callback
+  onEditTime: Callback
+  onEditTimerName: (e: ChangeEvent<any>) => any
   onToggleEditTime: (toggle: boolean) => () => any
 }
 
-export interface TimerListProps extends Pick<TimerItemContainerProps, 'onPlayAudio'> {
+type PickedUseWorkerTimerOptions = Pick<UseWorkerTimerOptions, 'onTimeValuesChanged' | 'onTimerNameChanged'>
+export interface TimerListProps extends Pick<TimerItemContainerProps, 'onPlayAudio'>, PickedUseWorkerTimerOptions {
   timerListData: SingleTimer[]
   onAddTimer: Callback
   onDeleteTimer: (id: number) => any
-  onTimeValuesChanged: (id: number, timerVals: TimeValues) => any
 }

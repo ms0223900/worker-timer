@@ -4,6 +4,7 @@ import { ReactComponent as DeleteIcon } from "../static/delete_black_24dp.svg";
 import { ReactComponent as ResetIcon } from "../static/restart_alt_black_24dp.svg";
 import { ReactComponent as DoneIcon } from "../static/done_black_24dp.svg";
 import { TimerItemProps } from "./types";
+import useToggle from "utils/functions/useToggle";
 
 const TimerInput = (props: any) => (
   <input
@@ -24,14 +25,21 @@ const TimerInput = (props: any) => (
 const TimerItem = ({
   isEdit,
   paused,
+  timerName,
   timeStr,
   timeValues,
   onStartPause,
   onReset,
   onDeleteTimer,
   onEditTime,
-  onToggleEditTime
+  onToggleEditTime,
+  onEditTimerName,
 }: TimerItemProps) => {
+  const {
+    toggle: isEditName,
+    handleToggle,
+    setToggle,
+  } = useToggle(false);
   return (
     <div
       style={{
@@ -39,31 +47,51 @@ const TimerItem = ({
       }}
     >
       <div className={"timer-wrapper"}>
-        <div onDoubleClick={onToggleEditTime(true)}>
-          {isEdit ? (
-            <form
-              style={{
-                display: "flex",
-                alignItems: "center"
-              }}
-              onChange={onEditTime}
-            >
-              <TimerInput name="mins" value={String(timeValues.mins)} />
-              <div
+        <div>
+          <div onClick={handleToggle}>
+            {(!timerName && !isEditName) && (
+              <span className={'input-timer-name-hint'}>
+                {'Double click to add name'}
+              </span>
+            )}
+            {isEditName ? (
+              <input
+                autoFocus={true}
+                value={timerName}
+                placeholder={'Timer Name'}
+                onChange={onEditTimerName}
+                onBlur={() => setToggle(false)} 
+              />
+            ): (
+              <p className={!timerName ? 'hint' : ''}>{timerName}</p>
+            )}
+          </div>
+          <div onDoubleClick={onToggleEditTime(true)}>
+            {isEdit ? (
+              <form
                 style={{
-                  padding: "0px 4px",
-                  fontSize: 30,
-                  fontWeight: "bolder"
+                  display: "flex",
+                  alignItems: "center"
                 }}
+                onChange={onEditTime}
               >
-                {" : "}
-              </div>
-              <TimerInput name="secs" value={String(timeValues.secs)} />
-              <DoneIcon onClick={onToggleEditTime(false)} />
-            </form>
-          ) : (
-            <h1>{timeStr}</h1>
-          )}
+                <TimerInput name="mins" value={String(timeValues.mins)} />
+                <div
+                  style={{
+                    padding: "0px 4px",
+                    fontSize: 30,
+                    fontWeight: "bolder"
+                  }}
+                >
+                  {" : "}
+                </div>
+                <TimerInput name="secs" value={String(timeValues.secs)} />
+                <DoneIcon onClick={onToggleEditTime(false)} />
+              </form>
+            ) : (
+              <h1>{timeStr}</h1>
+            )}
+          </div>
         </div>
         <div className={"button-wrapper"}>
           <button className={"timer-btn"} onClick={() => onStartPause()}>

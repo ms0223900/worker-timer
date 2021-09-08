@@ -3,6 +3,7 @@ import TimerListContainer from 'containers/TimerListContainer';
 import React, { memo, useRef } from 'react';
 import AudioPlocState from 'states/AudioPlocState';
 import usePlocState from 'states/usePlocState';
+import './styles.scss';
 
 export interface UseWorkerTimerViewProps {
   
@@ -32,7 +33,7 @@ const WorkerTimerView = () => {
   } = useWorkerTimerView();
 
   return (
-    <div>
+    <div className={'worker-timer-view--wrapper container'}>
       <h1>{'Worker Timer!'}</h1>
       <AudioSelectorContainer
         selectorListData={audioState.audioNameUrlList.map(a => ({

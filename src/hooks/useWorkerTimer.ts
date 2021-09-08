@@ -9,18 +9,25 @@ import usePlocState from "../states/usePlocState";
 
 export interface UseWorkerTimerOptions {
   timerId: number
+  timerName?: string
   initTimeVals?: TimeValues
   onTimeValuesChanged?: (timerId: number, timeVals: TimeValues) => any
+  onTimerNameChanged: (id: number, timerName?: string) => any
   onPlayAudio: Callback
 }
 
-const useWorkerTimer = ({
-  timerId,
-  initTimeVals,
-  onTimeValuesChanged,
-  onPlayAudio,
-}: UseWorkerTimerOptions) => {
+const useWorkerTimer = (options: UseWorkerTimerOptions) => {
+  const {
+    timerName,
+    timerId,
+    initTimeVals,
+    onTimeValuesChanged,
+    onTimerNameChanged,
+    onPlayAudio,
+  } = options;
+
   const timerPloc = useRef(new TimerPlocState({
+    timerName,
     timeValues: initTimeVals || DEFAULT_TIME_VALUES,
     onTimeupCb: () => onPlayAudio()
   }));
@@ -37,9 +44,22 @@ const useWorkerTimer = ({
     timerPloc.current.handleEditTimeVals(e.target.name, e.target.value);
   };
 
+  const handleEditTimerName = (e: ChangeEvent<any>) => {
+    timerPloc.current.handleEditTimerName(e.target.value);
+  };
+
   const handleTimeValueChanged = useCallback((_timeValues: TimeValues) => {
     onTimeValuesChanged && onTimeValuesChanged(timerId, {..._timeValues});
   }, [onTimeValuesChanged, timerId]);
+
+  useEffect(() => {
+    const listener: Listener<TimerState> = (s) => {
+      console.log(s.timerName);
+      onTimerNameChanged(timerId, s.timerName);
+    };
+    timerPloc.current.addlistener(listener, s => [s.timerName]);
+    return () => timerPloc.current.removeListener(listener);
+  }, [onTimerNameChanged, timerId]);
 
   useEffect(() => {
     const listner: Listener<ToggleState> = s => {
@@ -55,6 +75,7 @@ const useWorkerTimer = ({
     toggleState: toggleState,
     timerState: timerState,
     handleEditTime,
+    handleEditTimerName,
     handleStartPause,
     handleReset: timerPloc.current.handleResetTimer,
     handleToggleEditTime: togglePloc.current.setToggle,

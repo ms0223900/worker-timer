@@ -7,18 +7,21 @@ const TimerList = ({
   timerListData,
   onAddTimer,
   onDeleteTimer,
+  onTimerNameChanged,
   onTimeValuesChanged,
   onPlayAudio,
 }: TimerListProps) => {
   return (
     <>
-      {timerListData.map(({ timerId: id, timeValues }) => (
+      {timerListData.map(({ timerId: id, timeValues, timerName, }) => (
         <TimerItemContainer
           key={id}
           timerId={id}
+          timerName={timerName}
           initTimeVals={timeValues}
           onDeleteTimer={() => onDeleteTimer(id)}
           onTimeValuesChanged={onTimeValuesChanged}
+          onTimerNameChanged={onTimerNameChanged}
           onPlayAudio={onPlayAudio}
         />
       ))}

@@ -14,12 +14,16 @@ const defaultTimerListState: TimerListState = {
   timerList: []
 };
 
-export const getNewTimerList = (timerId: number, newTimeVals: TimeValues) => (s: TimerListState): TimerListState['timerList'] => {
+export const getNewTimerList = (timerId: number, newTimeVals?: TimeValues, timerName?: string) => (s: TimerListState): TimerListState['timerList'] => {
   let res: TimerListState['timerList'] = [...JSON.parse(JSON.stringify(s.timerList))];
     
   const timerIdx = s.timerList.findIndex(t => t.timerId === timerId);
   if(timerIdx !== -1) {
-    res[timerIdx].timeValues = {...newTimeVals};
+    res[timerIdx] = {
+      ...res[timerId],
+      timeValues: newTimeVals || res[timerId].timeValues,
+      timerName,
+    };
   }
   return res;
 };
@@ -39,6 +43,7 @@ class TimerListPlocState extends PlocState<TimerListState> {
   private makeNewTimer = (id: number, timeValues = DEFAULT_TIME_VALUES): SingleTimer => {
     return ({
       timerId: id,
+      timerName: '',
       timeValues,
     });
   }
@@ -48,16 +53,6 @@ class TimerListPlocState extends PlocState<TimerListState> {
     return ({
       timerList: s.timerList,
     });
-  }
-
-  private getNewTimerList = (timerId: number, newTimeVals: TimeValues) => (s: TimerListState) => {
-    let res = [...JSON.parse(JSON.stringify(s.timerList))];
-      
-    const timerIdx = s.timerList.findIndex(t => t.timerId === timerId);
-    if(timerIdx !== -1) {
-      res[timerIdx].timeValues = JSON.parse(JSON.stringify(newTimeVals));
-    }
-    return res;
   }
 
   handleAddTimer = (timeValues?: TimeValues) => {
@@ -76,7 +71,7 @@ class TimerListPlocState extends PlocState<TimerListState> {
     }));
   }
 
-  handleSetTimeValues(getNewTimerListFn: (params: any) => SingleTimer[]) {
+  handleUpdateTimerListByFn(getNewTimerListFn: (params: any) => SingleTimer[]) {
     this.updateState(s => {
       return ({
         timerList: getNewTimerListFn(s),
