@@ -19,10 +19,12 @@ export const getNewTimerList = (timerId: number, newTimeVals?: TimeValues, timer
     
   const timerIdx = s.timerList.findIndex(t => t.timerId === timerId);
   if(timerIdx !== -1) {
+    // console.log(res[timerId]);
+    const timer = res[timerIdx];
     res[timerIdx] = {
-      ...res[timerId],
-      timeValues: newTimeVals || res[timerId].timeValues,
-      timerName,
+      ...timer,
+      timeValues: newTimeVals || timer.timeValues,
+      timerName: timerName || timer.timerName,
     };
   }
   return res;

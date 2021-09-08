@@ -18,3 +18,30 @@
     }
   }
 }
+
+.timer-wrapper {
+  .timer-name--wrapper {
+
+    p {
+      color: #777;
+      font-weight: lighter;
+    }
+
+    input {
+      max-width: 120px;
+      padding: 4px;
+      border-radius: 20px;
+      // border-width: 0.5px;
+      border: unset;
+      text-align: center;
+      transition: .2s;
+
+      &:focus {
+        outline: unset;
+        background-color: #f3f3f3;
+        box-shadow: 0px 2px 4px inset #ddd;
+        transition: .2s;
+      }
+    }
+  }
+}

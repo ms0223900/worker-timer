@@ -47,7 +47,7 @@ const TimerItem = ({
       }}
     >
       <div className={"timer-wrapper"}>
-        <div>
+        <div className={'timer-name--wrapper'}>
           <div onClick={handleToggle}>
             {(!timerName && !isEditName) && (
               <span className={'input-timer-name-hint'}>
@@ -63,7 +63,7 @@ const TimerItem = ({
                 onBlur={() => setToggle(false)} 
               />
             ): (
-              <p className={!timerName ? 'hint' : ''}>{timerName}</p>
+              <p>{timerName}</p>
             )}
           </div>
           <div onDoubleClick={onToggleEditTime(true)}>
