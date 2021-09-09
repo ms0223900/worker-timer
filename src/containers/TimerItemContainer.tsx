@@ -5,6 +5,7 @@ import { TimerItemContainerProps } from './types';
 
 const TimerItemContainer = (props: TimerItemContainerProps) => {
   const {
+    ctxState,
     toggleState,
     timerState,
     handleEditTime,
@@ -15,19 +16,24 @@ const TimerItemContainer = (props: TimerItemContainerProps) => {
   } = useWorkerTimer(props);
 
   return (
-    <TimerItem
-      timerName={timerState.timerName}
-      isEdit={toggleState.toggle}
-      paused={timerState.paused}
-      timeStr={timerState.parsedMinSecStr}
-      timeValues={timerState.timeValues}
-      onEditTime={handleEditTime}
-      onEditTimerName={handleEditTimerName}
-      onStartPause={handleStartPause}
-      onReset={handleReset}
-      onDeleteTimer={props.onDeleteTimer}
-      onToggleEditTime={(toggle: boolean) => () => handleToggleEditTime(toggle)}
-    />
+    <>
+      <span style={{
+        display: 'none',
+      }}>{ctxState.alarmVolume}</span>
+      <TimerItem
+        timerName={timerState.timerName}
+        isEdit={toggleState.toggle}
+        paused={timerState.paused}
+        timeStr={timerState.parsedMinSecStr}
+        timeValues={timerState.timeValues}
+        onEditTime={handleEditTime}
+        onEditTimerName={handleEditTimerName}
+        onStartPause={handleStartPause}
+        onReset={handleReset}
+        onDeleteTimer={props.onDeleteTimer}
+        onToggleEditTime={(toggle: boolean) => () => handleToggleEditTime(toggle)}
+      />
+    </>
   );
 };
 

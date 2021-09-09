@@ -1,8 +1,9 @@
 import { SingleSelectorValText } from 'common-types';
 import AudioSelector from 'components/AudioSelector';
 import { AudioSelectorProps } from 'components/types';
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import useSelect from 'utils/functions/useSelect';
+import SettingsStorage from 'utils/handlers/SettingsStorage';
 
 export interface AudioSelectorContainerProps extends Pick<AudioSelectorProps, 'selectorListData'> {
   onAudioValueChanged: (url: string) => any
@@ -13,10 +14,19 @@ const AudioSelectorContainer = (props: AudioSelectorContainerProps) => {
     selectorListData,
     onAudioValueChanged,
   } = props;
+
+  const initSelectVal = SettingsStorage.getLSData()?.selectedAudio || selectorListData[2]?.value;
+
   const {
     val,
     handleSelect,
-  } = useSelect(selectorListData[0]?.value, onAudioValueChanged);
+  } = useSelect(initSelectVal, onAudioValueChanged);
+
+  useEffect(() => {
+    SettingsStorage.setLSData({
+      selectedAudio: val,
+    });
+  }, [val]);
 
   return (
     <AudioSelector

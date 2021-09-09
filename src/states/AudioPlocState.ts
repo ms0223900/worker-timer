@@ -79,8 +79,12 @@ class AudioPlocState extends PlocState<AudioState> {
     // }, this.state.playTimeout || defaultPlayTimeout);
   }
 
-  handleRepeatPlay = () => {
+  handleRepeatPlay = (audioOptions?: { volume?: number}) => {
     (async () => {
+      console.log(audioOptions);
+      if(audioOptions?.volume) {
+        this.audio.volume = audioOptions?.volume;
+      }
       const repeatTimes = this.state.repeatTimes || 3;
       for await (const i of Array(repeatTimes)) {
         await this.handleAsyncPlay();

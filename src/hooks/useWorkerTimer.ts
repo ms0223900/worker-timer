@@ -2,6 +2,7 @@ import { Callback } from "common-types";
 import { DEFAULT_TIME_VALUES } from "config";
 import { ChangeEvent, FormEvent, useCallback, useEffect, useRef } from "react";
 import AudioPlocState from "states/AudioPlocState";
+import { context } from "states/context";
 import { Listener } from "states/PlocState";
 import TimerPlocState, { TimerState, TimeValues } from "../states/TimerPlocState";
 import TogglePlocState, { ToggleState } from "../states/TogglePlocState";
@@ -26,10 +27,19 @@ const useWorkerTimer = (options: UseWorkerTimerOptions) => {
     onPlayAudio,
   } = options;
 
+  const ctxState = usePlocState(context);
+
+  const getVolume = () => {
+    // console.log(context.state.alarmVolume);
+    return context.state.alarmVolume;
+  };
+
   const timerPloc = useRef(new TimerPlocState({
     timerName,
     timeValues: initTimeVals || DEFAULT_TIME_VALUES,
-    onTimeupCb: () => onPlayAudio()
+    onTimeupCb: () => onPlayAudio({
+      volume: getVolume(),
+    })
   }));
   const timerState = usePlocState(timerPloc.current);
 
@@ -71,9 +81,14 @@ const useWorkerTimer = (options: UseWorkerTimerOptions) => {
     return () => togglePloc.current.removeListener(listner);
   }, [handleTimeValueChanged]);
 
+  // useEffect(() => {
+  //   console.log(ctxState.alarmVolume);
+  // }, [ctxState.alarmVolume]);
+
   return ({
-    toggleState: toggleState,
-    timerState: timerState,
+    ctxState,
+    toggleState,
+    timerState,
     handleEditTime,
     handleEditTimerName,
     handleStartPause,

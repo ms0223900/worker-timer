@@ -1,7 +1,9 @@
 import AudioSelectorContainer from 'containers/AudioSelectorContainer';
 import TimerListContainer from 'containers/TimerListContainer';
-import React, { memo, useRef } from 'react';
+import React, { ChangeEventHandler, memo, useRef } from 'react';
 import AudioPlocState from 'states/AudioPlocState';
+import { context } from 'states/context';
+import { ContextActionsEnum } from 'states/ContextPlocState';
 import usePlocState from 'states/usePlocState';
 import './styles.scss';
 
@@ -19,17 +21,29 @@ const useWorkerTimerView = () => {
     })
   );
   const audioState = usePlocState(audioPloc.current);
+  const ctx = usePlocState(context);
+
+  const handleChangeVolume: ChangeEventHandler<HTMLInputElement> = (e) => {
+    context.dispatch({
+      type: ContextActionsEnum.SET_VOLUME,
+      payload: { volume: Number(e.target.value) / 100 }
+    });
+  };
 
   return ({
+    ctx,
     audioPloc,
     audioState,
+    handleChangeVolume,
   });
 };
 
 const WorkerTimerView = () => {
   const {
+    ctx,
     audioPloc,
     audioState,
+    handleChangeVolume,
   } = useWorkerTimerView();
 
   return (
@@ -41,6 +55,16 @@ const WorkerTimerView = () => {
           value: a.url,
         }))} 
         onAudioValueChanged={audioPloc.current.handleSetAudioUrl}
+      />
+      <input 
+        type={'range'}
+        id={'volume'}
+        name={'volume'}
+        min={'0'}
+        max={'100'}
+        step={'11'}
+        value={String(ctx.alarmVolume * 100)}
+        onChange={handleChangeVolume}
       />
       <TimerListContainer
         onPlayAudio={audioPloc.current.handleRepeatPlay}

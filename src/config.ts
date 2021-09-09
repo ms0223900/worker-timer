@@ -1,7 +1,7 @@
 import { TimeValues } from "./states/TimerPlocState";
 
-export const WORKER_PATH = 'js/worker.js';
-export const AUDIO_PATH = 'assets/sounds';
+export const WORKER_PATH = process.env.PUBLIC_URL + '/js/worker.js';
+export const AUDIO_PATH = process.env.PUBLIC_URL + '/assets/sounds';
 
 export enum WORKER_MESSAGES {
   'STOP' = 'stop',
