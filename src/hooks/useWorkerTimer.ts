@@ -1,5 +1,5 @@
 import { Callback } from "common-types";
-import { DEFAULT_TIME_VALUES } from "config";
+import { DEFAULT_TIME_VALUES, WORKER_PATH } from "config";
 import { ChangeEvent, FormEvent, useCallback, useEffect, useRef } from "react";
 import AudioPlocState from "states/AudioPlocState";
 import { context } from "states/context";
@@ -34,7 +34,9 @@ const useWorkerTimer = (options: UseWorkerTimerOptions) => {
     return context.state.alarmVolume;
   };
 
+  const worker = useRef<any>();
   const timerPloc = useRef(new TimerPlocState({
+    // timerWorker: worker.current,
     timerName,
     timeValues: initTimeVals || DEFAULT_TIME_VALUES,
     onTimeupCb: () => onPlayAudio({
@@ -61,6 +63,13 @@ const useWorkerTimer = (options: UseWorkerTimerOptions) => {
   const handleTimeValueChanged = useCallback((_timeValues: TimeValues) => {
     onTimeValuesChanged && onTimeValuesChanged(timerId, {..._timeValues});
   }, [onTimeValuesChanged, timerId]);
+
+  useEffect(() => {
+    worker.current = new Worker(WORKER_PATH);
+    timerPloc.current.registerUpdatingByTimerWorker(
+      worker.current
+    );
+  }, []);
 
   useEffect(() => {
     const listener: Listener<TimerState> = (s) => {

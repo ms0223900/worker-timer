@@ -13,6 +13,7 @@ export interface TimeValues {
 }
 
 export interface TimerState {
+  timerWorker?: any
   timerName?: string
   remainSecs: number
   passedSecs: number
@@ -34,17 +35,13 @@ export const initTimerState: TimerState = {
   },
   parsedMinSecStr: '',
 };
-
 class TimerPlocState extends PlocState<TimerState> {
-  timerWorker = new Worker(WORKER_PATH)
-
   constructor(initState?: Partial<TimerState>) {
     super({
       ...initTimerState,
       ...initState,
     });
-    this.updateByTimerWorker();
-
+    this.registerUpdatingByTimerWorker();
     this.updateState(s => ({
       remainSecs: getRemainSecs(s.timeValues, s.passedSecs),
     }));
@@ -65,6 +62,10 @@ class TimerPlocState extends PlocState<TimerState> {
       this.updateByRemainSecs,
       s => [s.remainSecs, s.paused]
     );
+  }
+
+  get timerWorker() {
+    return this.state.timerWorker;
   }
 
   handleResetTimer = () => {
@@ -126,18 +127,25 @@ class TimerPlocState extends PlocState<TimerState> {
     }));
   }
 
-  private updateByTimerWorker() {
-    const tick = (e: MessageEvent<any>) => {
-      if(e.data === WORKER_MESSAGES.TICK_FROM_WORKER) {
-        this.handleAddPassedSecs();
-      }
-    };
-
-    this.timerWorker.addEventListener('message', tick);
-    return () => {
-      this.timerWorker.removeEventListener('message', tick);
-      this.timerWorker.postMessage(WORKER_MESSAGES.STOP);
-    };
+  registerUpdatingByTimerWorker(timerWorker?: Worker) {
+    if(timerWorker) {
+      this.updateState(s => ({
+        timerWorker,
+      }));
+    }
+    if(this.timerWorker) {
+      const tick = (e: MessageEvent<any>) => {
+        if(e.data === WORKER_MESSAGES.TICK_FROM_WORKER) {
+          this.handleAddPassedSecs();
+        }
+      };
+  
+      this.timerWorker.addEventListener('message', tick);
+      return () => {
+        this.timerWorker.removeEventListener('message', tick);
+        this.timerWorker.postMessage(WORKER_MESSAGES.STOP);
+      };
+    }
   }
 
   private updateByRemainSecs: Listener<TimerState> = (s) => {

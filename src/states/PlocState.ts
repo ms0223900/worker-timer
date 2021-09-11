@@ -12,6 +12,7 @@ export interface SingleListenerWithCompare<State> {
 
 class PlocState<State> {
   private _state: State
+  private _prevState: State
 
   get state(): State {
     return this._state;
@@ -21,6 +22,7 @@ class PlocState<State> {
 
   constructor(initState: State) {
     this._state = initState;
+    this._prevState = initState;
     this.listeners = [];
   }
 
@@ -39,10 +41,27 @@ class PlocState<State> {
     return _newState;
   }
 
+  private compareStateIsSame(newState: State) {
+    return JSON.stringify(this._prevState) === JSON.stringify(newState);
+  }
+
+  private syncPrevState() {
+    this._prevState = JSON.parse(JSON.stringify(this.state));
+  }
+
+  private syncStateWithPartialNewState(partialState: Partial<State>) {
+    this._state = {
+      ...this.state,
+      ...partialState,
+    };
+  }
+
   updateState<NewState extends Partial<State> | GetNewStateFn<State>>(newState: NewState): void {
     const _newState = this.getNewState(newState);
 
-    this._state = { ...this.state, ..._newState };
+    this.syncStateWithPartialNewState(_newState);
+    // if(this.compareStateIsSame(this._state)) return;
+
     this.listeners.forEach((l, i) => {
       if (l.compareValFn) {
         const shouldUpdateByCompareVal = this.checkShouldUpdateByListener(l.compareVal, l.compareValFn);
@@ -51,13 +70,11 @@ class PlocState<State> {
 
       const listenerReturnVal = l.listener(this.state);
       if (listenerReturnVal && typeof listenerReturnVal === 'object') {
-        this._state = {
-          ...this.state,
-          ...listenerReturnVal,
-        };
+        this.syncStateWithPartialNewState(listenerReturnVal);
       }
       if (l.compareValFn) { l.compareVal = [...l.compareValFn(this.state)]; }
     });
+    this.syncPrevState();
   }
 
   addlistener(listener: Listener<State>, compareValFn?: (s: State) => State[keyof State][]): void {
