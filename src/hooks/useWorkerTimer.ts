@@ -37,6 +37,7 @@ const useWorkerTimer = (options: UseWorkerTimerOptions) => {
   const worker = useRef<any>();
   const timerPloc = useRef(new TimerPlocState({
     // timerWorker: worker.current,
+    timerId,
     timerName,
     timeValues: initTimeVals || DEFAULT_TIME_VALUES,
     onTimeupCb: () => onPlayAudio({

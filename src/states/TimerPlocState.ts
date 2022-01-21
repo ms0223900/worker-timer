@@ -1,4 +1,5 @@
 import { Callback, SetTimeValuesFn } from "common-types";
+import DocumentTitleDisplayer from "utils/functions/DocumentTitleDisplayer";
 import { WORKER_MESSAGES, WORKER_PATH } from "../config";
 import parseSecsToMinSec from "../utils/functions/parseSecsToMinSec";
 import PlocState, { Listener, } from "./PlocState";
@@ -13,6 +14,7 @@ export interface TimeValues {
 }
 
 export interface TimerState {
+  timerId: number
   timerWorker?: any
   timerName?: string
   remainSecs: number
@@ -25,6 +27,7 @@ export interface TimerState {
 }
 
 export const initTimerState: TimerState = {
+  timerId: 0,
   timerName: '',
   remainSecs: 0,
   passedSecs: 0,
@@ -52,6 +55,10 @@ class TimerPlocState extends PlocState<TimerState> {
     this.addlistener(s => {
       const remainSecs = getRemainSecs(s.timeValues, s.passedSecs);
       const parsedMinSecStr = parseSecsToMinSec(remainSecs);
+      DocumentTitleDisplayer.handleAddOrUpdateTime(
+        this.state.timerId,
+        this.state.parsedMinSecStr,
+      );
       return ({
         remainSecs,
         parsedMinSecStr,
