@@ -1,6 +1,16 @@
+const DEFAULT_TIMER_TITLE = 'Worker Timer!';
 export interface DocumentTitleDisplayerState {
   timeStrList: string[]
 }
+
+const splitParsedMinSec = (parsedTime: string) => {
+  const [
+    min, sec
+  ] = parsedTime.split(':').map(Number);
+  return ({
+    min, sec
+  });
+};
 
 const DocumentTitleDisplayer = (() => {
   let state: DocumentTitleDisplayerState = {
@@ -8,12 +18,17 @@ const DocumentTitleDisplayer = (() => {
   };
   const listners: ((s: DocumentTitleDisplayerState) => any)[] = [];
   listners.push(
-    handleShowOnTitle,
+    handleShowJoinedTimeOnTitle,
   );
 
-  function handleShowOnTitle(s: DocumentTitleDisplayerState) {
-    if(!s.timeStrList.length) return;
-    document.title = s.timeStrList.filter(Boolean).join(' / ');
+  function handleShowJoinedTimeOnTitle(s: DocumentTitleDisplayerState) {
+    // console.log(s.timeStrList);
+    const filtered = s.timeStrList.filter(Boolean);
+    if(!filtered.length) {
+      document.title = DEFAULT_TIMER_TITLE;
+    } else {
+      document.title = filtered.join(' / ');
+    }
   };
 
   const updateState = (newS: Partial<DocumentTitleDisplayerState>) => {
@@ -22,6 +37,14 @@ const DocumentTitleDisplayer = (() => {
       ...newS,
     };
     listners.forEach(l => l(state));
+  };
+
+  function handleRemoveTimeUpTime(timerId: number) {
+    const newS = [...state.timeStrList];
+    newS.splice(timerId);
+    updateState({
+      timeStrList: newS,
+    });
   };
 
   const handleAddOrUpdateTime = (timerId: number, parsedTime: string) => {
@@ -35,6 +58,7 @@ const DocumentTitleDisplayer = (() => {
 
   return ({
     handleAddOrUpdateTime,
+    handleRemoveTimeUpTime,
   });
 })();
 

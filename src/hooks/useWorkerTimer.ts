@@ -4,6 +4,7 @@ import { ChangeEvent, FormEvent, useCallback, useEffect, useRef } from "react";
 import AudioPlocState from "states/AudioPlocState";
 import { context } from "states/context";
 import { Listener } from "states/PlocState";
+import DocumentTitleDisplayer from "utils/functions/DocumentTitleDisplayer";
 import TimerPlocState, { TimerState, TimeValues } from "../states/TimerPlocState";
 import TogglePlocState, { ToggleState } from "../states/TogglePlocState";
 import usePlocState from "../states/usePlocState";
@@ -40,9 +41,12 @@ const useWorkerTimer = (options: UseWorkerTimerOptions) => {
     timerId,
     timerName,
     timeValues: initTimeVals || DEFAULT_TIME_VALUES,
-    onTimeupCb: () => onPlayAudio({
-      volume: getVolume(),
-    })
+    onTimeupCb: (s) => {
+      onPlayAudio({
+        volume: getVolume(),
+      });
+      DocumentTitleDisplayer.handleRemoveTimeUpTime(s.timerId);
+    }
   }));
   const timerState = usePlocState(timerPloc.current);
 
@@ -70,6 +74,12 @@ const useWorkerTimer = (options: UseWorkerTimerOptions) => {
     timerPloc.current.registerUpdatingByTimerWorker(
       worker.current
     );
+    timerPloc.current.addlistener((s) => {
+      DocumentTitleDisplayer.handleAddOrUpdateTime(
+        s.timerId,
+        s.parsedMinSecStr,
+      );
+    }, s => [s.parsedMinSecStr, s.timerId]);
   }, []);
 
   useEffect(() => {

@@ -22,7 +22,7 @@ export interface TimerState {
   paused: boolean
   timeValues: TimeValues
   parsedMinSecStr: string
-  onTimeupCb?: Callback
+  onTimeupCb?: (s: TimerState) => any
   onTimeValuesChangedCb?: (timeValues: TimeValues) => any
 }
 
@@ -55,10 +55,10 @@ class TimerPlocState extends PlocState<TimerState> {
     this.addlistener(s => {
       const remainSecs = getRemainSecs(s.timeValues, s.passedSecs);
       const parsedMinSecStr = parseSecsToMinSec(remainSecs);
-      DocumentTitleDisplayer.handleAddOrUpdateTime(
-        this.state.timerId,
-        this.state.parsedMinSecStr,
-      );
+      // DocumentTitleDisplayer.handleAddOrUpdateTime(
+      //   this.state.timerId,
+      //   this.state.parsedMinSecStr,
+      // );
       return ({
         remainSecs,
         parsedMinSecStr,
@@ -158,7 +158,7 @@ class TimerPlocState extends PlocState<TimerState> {
   private updateByRemainSecs: Listener<TimerState> = (s) => {
     if(s.remainSecs < 0 && !s.paused) {
       this.handleResetTimer();
-      s.onTimeupCb && s.onTimeupCb();
+      s.onTimeupCb && s.onTimeupCb(this.state);
     }
   }
 }
