@@ -9,7 +9,7 @@ const useSelect = (initSelectVal = '', onValChanged?: Callback) => {
     setVal(e.target.value);
   }, []);
 
-  handleValChanged.current = onValChanged;
+  // handleValChanged.current = onValChanged;
   useEffect(() => {
     handleValChanged.current && handleValChanged.current(val);
   }, [val]);

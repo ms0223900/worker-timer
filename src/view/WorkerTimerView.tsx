@@ -1,11 +1,12 @@
 import AudioSelectorContainer from 'containers/AudioSelectorContainer';
 import TimerListContainer from 'containers/TimerListContainer';
-import React, { ChangeEventHandler, memo, useRef } from 'react';
+import React, {ChangeEventHandler, memo, useRef} from 'react';
 import AudioPlocState from 'states/AudioPlocState';
-import { context } from 'states/context';
-import { ContextActionsEnum } from 'states/ContextPlocState';
+import {context} from 'states/context';
+import {ContextActionsEnum} from 'states/ContextPlocState';
 import usePlocState from 'states/usePlocState';
 import './styles.scss';
+import CustomInputTimer from "./CustomInputTimer";
 
 export interface UseWorkerTimerViewProps {
   
@@ -69,6 +70,8 @@ const WorkerTimerView = () => {
       <TimerListContainer
         onPlayAudio={audioPloc.current.handleRepeatPlay}
       />
+        <CustomInputTimer onAlarm={audioPloc.current.handleRepeatPlay}
+                          onReset={audioPloc.current.handlePause}/>
     </div>
   );
 };
