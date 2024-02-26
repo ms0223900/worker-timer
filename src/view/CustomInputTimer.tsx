@@ -34,13 +34,13 @@ const InputTimer: React.FC<InputTimerProps> = ({
     const {
         timerState,
         getTimerPloc,
-        handleEditTime,
         handleReset,
         handleStartPause,
     } = useWorkerTimer({
         timerName: TIMER_NAME,
         initTimeVals: initTimeVals,
-        onPlayAudio(params: any): any {
+        onPlayAudio(): any {
+            onReset && onReset()
             onAlarm()
         },
         onTimerNameChanged(id: number, timerName: string | undefined): any {
@@ -63,24 +63,12 @@ const InputTimer: React.FC<InputTimerProps> = ({
     })();
 
     const handleStartCountdown = () => {
-        // TODO,
         const handledTimeMin = getHandledTime(time.min);
         const handledTimeSec = getHandledTime(time.sec)
 
         getTimerPloc().current.handleEditTimeVals('mins', String(handledTimeMin))
         getTimerPloc().current.handleEditTimeVals('secs', String(handledTimeSec))
-        // handleEditTime({
-        //     target: {
-        //         name: 'mins',
-        //         value: time.min,
-        //     }
-        // })
-        // handleEditTime({
-        //     target: {
-        //         name: 'secs',
-        //         value: time.sec,
-        //     }
-        // })
+
         handleStartPause()
     };
 
