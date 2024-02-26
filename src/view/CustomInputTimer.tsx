@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Callback} from "../common-types";
+import useWorkerTimer from "../hooks/useWorkerTimer";
 
 const INIT_TIME = {
     hour: 0,
@@ -13,14 +14,39 @@ interface InputTimerProps {
     onAlarm: Callback
 }
 
+const initTimeVals = {
+    mins: 0,
+    secs: 0,
+};
+
+function getHandledTime(num: number | string) {
+    return Number(num) < 0 ? 0 : Number(num);
+}
+
 const InputTimer: React.FC<InputTimerProps> = ({
-    onReset,
-    onAlarm
-                    }) => {
+                                                   onReset,
+                                                   onAlarm
+                                               }) => {
     const inputElRef = useRef<HTMLInputElement>(null);
-    const timer = useRef<NodeJS.Timeout | null>(null);
     const [inputVal, setInputVal] = useState("");
-    const [countdownTime, setTime] = useState(INIT_TIME);
+
+    const TIMER_NAME = 'INPUT_TIMER';
+    const {
+        timerState,
+        getTimerPloc,
+        handleEditTime,
+        handleReset,
+        handleStartPause,
+    } = useWorkerTimer({
+        timerName: TIMER_NAME,
+        initTimeVals: initTimeVals,
+        onPlayAudio(params: any): any {
+            onAlarm()
+        },
+        onTimerNameChanged(id: number, timerName: string | undefined): any {
+        },
+        timerId: ~~(Math.random() * 100000),
+    });
 
     const time = (() => {
         const sec = inputVal.slice(inputVal.length - 2, inputVal.length) || "00";
@@ -35,46 +61,33 @@ const InputTimer: React.FC<InputTimerProps> = ({
             totalSecs: Number(hour) * 3600 + Number(min) * 60 + Number(sec),
         };
     })();
-    const joinedTime = `${countdownTime.hour}:${countdownTime.min}:${countdownTime.sec}`;
-
-    function getRemainTime(totalSecs: number) {
-        const remainSecs = totalSecs - 1;
-        const hour = Math.floor(remainSecs / 3600);
-        const min = Math.floor((remainSecs - hour * 3600) / 60);
-        const sec = remainSecs - hour * 3600 - min * 60;
-        return {remainSecs, hour, min, sec};
-    }
 
     const handleStartCountdown = () => {
-        setTime(time);
-        timer.current = setInterval(() => {
-            setTime(({ totalSecs }) => {
-                const {remainSecs, hour, min, sec} = getRemainTime(totalSecs);
-                if (remainSecs === 0) {
-                    onAlarm()
-                    handleResetAndStop()
-                    return {
-                        totalSecs: remainSecs,
-                        hour,
-                        min,
-                        sec,
-                    };
-                }
-                return {
-                    totalSecs: remainSecs,
-                    hour,
-                    min,
-                    sec,
-                };
-            });
-        }, 1000);
+        // TODO,
+        const handledTimeMin = getHandledTime(time.min);
+        const handledTimeSec = getHandledTime(time.sec)
+
+        getTimerPloc().current.handleEditTimeVals('mins', String(handledTimeMin))
+        getTimerPloc().current.handleEditTimeVals('secs', String(handledTimeSec))
+        // handleEditTime({
+        //     target: {
+        //         name: 'mins',
+        //         value: time.min,
+        //     }
+        // })
+        // handleEditTime({
+        //     target: {
+        //         name: 'secs',
+        //         value: time.sec,
+        //     }
+        // })
+        handleStartPause()
     };
 
     const handleResetAndStop = () => {
         onReset && onReset()
-        setTime(INIT_TIME);
+        handleReset()
         setInputVal("");
-        timer.current && clearInterval(timer.current);
     };
 
     useEffect(() => {
@@ -84,7 +97,7 @@ const InputTimer: React.FC<InputTimerProps> = ({
     return (
         <div>
             <div>
-                <h3>{joinedTime}</h3>
+                <h3>{timerState.parsedMinSecStr}</h3>
                 <input
                     ref={inputElRef}
                     autoFocus={true}

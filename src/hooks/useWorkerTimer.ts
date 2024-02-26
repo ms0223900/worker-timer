@@ -109,6 +109,7 @@ const useWorkerTimer = (options: UseWorkerTimerOptions) => {
     ctxState,
     toggleState,
     timerState,
+    getTimerPloc: () => timerPloc,
     handleEditTime,
     handleEditTimerName,
     handleStartPause,

@@ -113,7 +113,7 @@ class TimerPlocState extends PlocState<TimerState> {
     }
   }
 
-  handleEditTimeVals = (name: any, val: string) => {
+  handleEditTimeVals = (name: any, val: string | number) => {
     this.updateState((s) => ({
       timeValues: ({
         ...s.timeValues,
