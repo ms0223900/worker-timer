@@ -43,7 +43,7 @@ const InputTimer: React.FC<InputTimerProps> = ({
             onReset && onReset()
             onAlarm()
         },
-        onTimerNameChanged(id: number, timerName: string | undefined): any {
+        onTimerNameChanged: () => {
         },
         timerId: ~~(Math.random() * 100000),
     });
