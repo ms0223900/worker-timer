@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/worker-timer/static/css/main.47d754f5.chunk.css",
-    "main.js": "/worker-timer/static/js/main.ce35ce75.chunk.js",
-    "main.js.map": "/worker-timer/static/js/main.ce35ce75.chunk.js.map",
+    "main.js": "/worker-timer/static/js/main.98b848a4.chunk.js",
+    "main.js.map": "/worker-timer/static/js/main.98b848a4.chunk.js.map",
     "runtime-main.js": "/worker-timer/static/js/runtime-main.085e2483.js",
     "runtime-main.js.map": "/worker-timer/static/js/runtime-main.085e2483.js.map",
-    "static/js/2.e7e0f94a.chunk.js": "/worker-timer/static/js/2.e7e0f94a.chunk.js",
-    "static/js/2.e7e0f94a.chunk.js.map": "/worker-timer/static/js/2.e7e0f94a.chunk.js.map",
+    "static/js/2.604aee98.chunk.js": "/worker-timer/static/js/2.604aee98.chunk.js",
+    "static/js/2.604aee98.chunk.js.map": "/worker-timer/static/js/2.604aee98.chunk.js.map",
     "static/js/3.10ad0057.chunk.js": "/worker-timer/static/js/3.10ad0057.chunk.js",
     "static/js/3.10ad0057.chunk.js.map": "/worker-timer/static/js/3.10ad0057.chunk.js.map",
     "index.html": "/worker-timer/index.html",
     "static/css/main.47d754f5.chunk.css.map": "/worker-timer/static/css/main.47d754f5.chunk.css.map",
-    "static/js/2.e7e0f94a.chunk.js.LICENSE.txt": "/worker-timer/static/js/2.e7e0f94a.chunk.js.LICENSE.txt",
+    "static/js/2.604aee98.chunk.js.LICENSE.txt": "/worker-timer/static/js/2.604aee98.chunk.js.LICENSE.txt",
     "static/media/add_black_24dp.376e9b6a.svg": "/worker-timer/static/media/add_black_24dp.376e9b6a.svg",
     "static/media/delete_black_24dp.1129c53a.svg": "/worker-timer/static/media/delete_black_24dp.1129c53a.svg",
     "static/media/done_black_24dp.6a318b8d.svg": "/worker-timer/static/media/done_black_24dp.6a318b8d.svg",
@@ -21,8 +21,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.085e2483.js",
-    "static/js/2.e7e0f94a.chunk.js",
+    "static/js/2.604aee98.chunk.js",
     "static/css/main.47d754f5.chunk.css",
-    "static/js/main.ce35ce75.chunk.js"
+    "static/js/main.98b848a4.chunk.js"
   ]
 }
