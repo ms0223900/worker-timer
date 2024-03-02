@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/worker-timer/static/css/main.47d754f5.chunk.css",
-    "main.js": "/worker-timer/static/js/main.5a547166.chunk.js",
-    "main.js.map": "/worker-timer/static/js/main.5a547166.chunk.js.map",
+    "main.css": "/worker-timer/static/css/main.07ddcf6c.chunk.css",
+    "main.js": "/worker-timer/static/js/main.c56b3856.chunk.js",
+    "main.js.map": "/worker-timer/static/js/main.c56b3856.chunk.js.map",
     "runtime-main.js": "/worker-timer/static/js/runtime-main.085e2483.js",
     "runtime-main.js.map": "/worker-timer/static/js/runtime-main.085e2483.js.map",
     "static/js/2.604aee98.chunk.js": "/worker-timer/static/js/2.604aee98.chunk.js",
@@ -10,7 +10,7 @@
     "static/js/3.10ad0057.chunk.js": "/worker-timer/static/js/3.10ad0057.chunk.js",
     "static/js/3.10ad0057.chunk.js.map": "/worker-timer/static/js/3.10ad0057.chunk.js.map",
     "index.html": "/worker-timer/index.html",
-    "static/css/main.47d754f5.chunk.css.map": "/worker-timer/static/css/main.47d754f5.chunk.css.map",
+    "static/css/main.07ddcf6c.chunk.css.map": "/worker-timer/static/css/main.07ddcf6c.chunk.css.map",
     "static/js/2.604aee98.chunk.js.LICENSE.txt": "/worker-timer/static/js/2.604aee98.chunk.js.LICENSE.txt",
     "static/media/add_black_24dp.376e9b6a.svg": "/worker-timer/static/media/add_black_24dp.376e9b6a.svg",
     "static/media/delete_black_24dp.1129c53a.svg": "/worker-timer/static/media/delete_black_24dp.1129c53a.svg",
@@ -22,7 +22,7 @@
   "entrypoints": [
     "static/js/runtime-main.085e2483.js",
     "static/js/2.604aee98.chunk.js",
-    "static/css/main.47d754f5.chunk.css",
-    "static/js/main.5a547166.chunk.js"
+    "static/css/main.07ddcf6c.chunk.css",
+    "static/js/main.c56b3856.chunk.js"
   ]
 }
