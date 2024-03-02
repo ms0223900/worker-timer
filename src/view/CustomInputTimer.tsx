@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {KeyboardEventHandler, useEffect, useRef, useState} from "react";
 import {Callback} from "../common-types";
 import useWorkerTimer from "../hooks/useWorkerTimer";
 
@@ -91,6 +91,14 @@ const InputTimer: React.FC<InputTimerProps> = ({
         handleFocusInput();
     }, []);
 
+    const handleKeyboardSupport: KeyboardEventHandler<HTMLInputElement> = e => {
+        console.log("e.key: ", e.key);
+        if (e.key === 'Enter') {
+            handleStartCountdown()
+        }
+
+    };
+
     return (
         <div>
             <div>
@@ -103,6 +111,7 @@ const InputTimer: React.FC<InputTimerProps> = ({
                     onChange={(e) => {
                         setInputVal(e.target.value);
                     }}
+                    onKeyUp={handleKeyboardSupport}
                 />
                 <button onClick={handleStartCountdown}>Start</button>
                 <button onClick={handleResetAndStop}>Reset</button>
