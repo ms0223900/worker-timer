@@ -23,6 +23,21 @@ function getHandledTime(num: number | string) {
     return Number(num) < 0 ? 0 : Number(num);
 }
 
+function parseTimeToHHMMSS(inputVal: string) {
+    const sec = inputVal.slice(inputVal.length - 2, inputVal.length) || "00";
+    const min =
+        inputVal.slice(Math.max(inputVal.length - 4, 0), inputVal.length - 2) ||
+        "00";
+    const hour = inputVal.slice(0, Math.max(inputVal.length - 4, 0)) || "00";
+
+    return {
+        hour: Number(hour),
+        min: Number(min),
+        sec: Number(sec),
+        totalSecs: Number(hour) * 3600 + Number(min) * 60 + Number(sec),
+    };
+}
+
 const InputTimer: React.FC<InputTimerProps> = ({
                                                    onReset,
                                                    onAlarm
@@ -40,8 +55,11 @@ const InputTimer: React.FC<InputTimerProps> = ({
         timerName: TIMER_NAME,
         initTimeVals: initTimeVals,
         onTimerEnd(): any {
-            onReset && onReset()
+            handleResetInput()
             onAlarm()
+            handleFocusInput()
+            getTimerPloc().current.handleEditTimeVals('mins', String(0))
+            getTimerPloc().current.handleEditTimeVals('secs', String(0))
         },
         onTimerNameChanged: () => {
         },
@@ -49,17 +67,7 @@ const InputTimer: React.FC<InputTimerProps> = ({
     });
 
     const time = (() => {
-        const sec = inputVal.slice(inputVal.length - 2, inputVal.length) || "00";
-        const min =
-            inputVal.slice(Math.max(inputVal.length - 4, 0), inputVal.length - 2) ||
-            "00";
-        const hour = inputVal.slice(0, Math.max(inputVal.length - 4, 0)) || "00";
-        return {
-            hour: Number(hour),
-            min: Number(min),
-            sec: Number(sec),
-            totalSecs: Number(hour) * 3600 + Number(min) * 60 + Number(sec),
-        };
+        return parseTimeToHHMMSS(inputVal);
     })();
 
     const handleStartCountdown = () => {
@@ -72,14 +80,22 @@ const InputTimer: React.FC<InputTimerProps> = ({
         handleStartPause()
     };
 
-    const handleResetAndStop = () => {
+    function handleResetInput() {
         onReset && onReset()
-        handleReset()
         setInputVal("");
+    }
+
+    const handleResetAndStop = () => {
+        handleResetInput();
+        handleReset()
     };
 
-    useEffect(() => {
+    function handleFocusInput() {
         inputElRef.current?.focus();
+    }
+
+    useEffect(() => {
+        handleFocusInput();
     }, []);
 
     return (
