@@ -39,7 +39,7 @@ const InputTimer: React.FC<InputTimerProps> = ({
     } = useWorkerTimer({
         timerName: TIMER_NAME,
         initTimeVals: initTimeVals,
-        onPlayAudio(): any {
+        onTimerEnd(): any {
             onReset && onReset()
             onAlarm()
         },
