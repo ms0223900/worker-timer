@@ -2,13 +2,6 @@ import React, {useEffect, useRef, useState} from "react";
 import {Callback} from "../common-types";
 import useWorkerTimer from "../hooks/useWorkerTimer";
 
-const INIT_TIME = {
-    hour: 0,
-    min: 0,
-    sec: 0,
-    totalSecs: 0,
-};
-
 interface InputTimerProps {
     onReset?: Callback
     onAlarm: Callback
